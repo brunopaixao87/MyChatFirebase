@@ -1,14 +1,15 @@
 import {Component} from '@angular/core';
 import {AlertController, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import {AuthService} from "../../providers/auth/auth.service";
-import {UserService} from "../../providers/user/user.service";
+import {AuthService} from '../../providers/auth/auth.service';
+import {UserService} from '../../providers/user/user.service';
 
-import {User} from "../../model/user.model";
+import {User} from '../../model/user.model';
 
 
 import * as firebase from 'firebase/app';
+import {HomePage} from "../home/home";
 
 @Component({
   selector: 'page-signup',
@@ -40,20 +41,35 @@ export class SignupPage {
   }
 
   onsubmit(): void {
-    this.onSaveUserAuth();
+    this.onSaveUser();
   }
 
-  private onSaveUserAuth(): void {
-
+  private onSaveUser(): void {
     let loading = this.showLoading();
     let user: User = this.singupForm.value;
 
+    this.userService.userExists(user.username)
+      .first()
+      .subscribe((userExists: boolean) => {
+        if (userExists) {
+          loading.dismiss();
+          this.showAlert(`O Username ${user.username} já está sendo utilizado por outra conta!`);
+          return;
+        }
+        this.onSaveUserAuth(user, loading);
+      });
+
+
+  }
+
+  private onSaveUserAuth(user: User, loading: any): void {
     this.authService.createAuthUser({email: user.email, password: user.password})
       .then((authState: firebase.User) => {
         delete user.password
         user.uid = authState.uid;
         this.onSaveUserForm(user, loading);
         loading.dismiss();
+        this.navCtrl.setRoot(HomePage);
       }).catch((erro: any) => {
       loading.dismiss();
       this.showAlert(erro);
