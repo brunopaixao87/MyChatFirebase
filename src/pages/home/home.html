@@ -20,7 +20,7 @@
       <ion-item>Chats</ion-item>
     </ion-list>
     <ion-list *ngSwitchCase="'users'">
-      <button ion-item *ngFor="let user of users | async">
+      <button ion-item *ngFor="let user of users | async" (click)="onChatCreate(user)">
         {{user.name}}
       </button>
     </ion-list>

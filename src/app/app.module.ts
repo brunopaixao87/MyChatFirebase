@@ -18,6 +18,8 @@ import {SignupPage} from '../pages/signup/signup';
 import {SigninPage} from '../pages/signin/signin';
 import {CustomLoggedHeaderComponent} from '../components/custom-logged-header/custom-logged-header.component';
 import {CapitalizePipe} from '../pipes/capitalize/capitalize';
+import {ChatPage} from "../pages/chat/chat";
+import {ChatService} from '../providers/chat/chat.service';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: 'AIzaSyDA5sh07TnKTW2jJTvVaxylWwwqV0pZ3J0',
@@ -32,8 +34,9 @@ const firebaseAppConfig: FirebaseAppConfig = {
   declarations: [
     CustomLoggedHeaderComponent,
     CapitalizePipe,
-    MyApp,
+    ChatPage,
     HomePage,
+    MyApp,
     SignupPage,
     SigninPage
   ],
@@ -47,17 +50,19 @@ const firebaseAppConfig: FirebaseAppConfig = {
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    ChatPage,
     HomePage,
+    MyApp,
     SignupPage,
     SigninPage
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthService,
-    UserService
+    ChatService,
+    SplashScreen,
+    StatusBar,
+    UserService,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {

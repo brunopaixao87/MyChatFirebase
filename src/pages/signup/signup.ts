@@ -66,8 +66,8 @@ export class SignupPage {
     this.authService.createAuthUser({email: user.email, password: user.password})
       .then((authState: firebase.User) => {
         delete user.password
-        user.uid = authState.uid;
-        this.onSaveUserForm(user, loading);
+        const uuid: string = authState.uid;
+        this.onSaveUserForm(user, uuid, loading);
         loading.dismiss();
         this.navCtrl.setRoot(HomePage);
       }).catch((erro: any) => {
@@ -76,8 +76,8 @@ export class SignupPage {
     });
   }
 
-  private onSaveUserForm(user: User, loading: any): void {
-    this.userService.create(user)
+  private onSaveUserForm(user: User, uuid: string, loading: any): void {
+    this.userService.create(user, uuid)
       .then(() => {
         console.log('Usuário Cadastrado!')
       }).catch((erro: any) => {
