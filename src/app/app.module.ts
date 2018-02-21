@@ -18,8 +18,13 @@ import {SignupPage} from '../pages/signup/signup';
 import {SigninPage} from '../pages/signin/signin';
 import {CustomLoggedHeaderComponent} from '../components/custom-logged-header/custom-logged-header.component';
 import {CapitalizePipe} from '../pipes/capitalize/capitalize';
-import {ChatPage} from "../pages/chat/chat";
+import {ChatPage} from '../pages/chat/chat';
 import {ChatService} from '../providers/chat/chat.service';
+import {MessageService} from '../providers/message/message.service';
+import {MessageBoxComponent} from '../components/message-box/message-box.component';
+import {UserInfoComponent} from '../components/user-info/user-info.component';
+import {UserMenuComponent} from '../components/user-menu/user-menu.component';
+import {UserProfilePage} from '../pages/user-profile/user-profile';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: 'AIzaSyDA5sh07TnKTW2jJTvVaxylWwwqV0pZ3J0',
@@ -36,9 +41,13 @@ const firebaseAppConfig: FirebaseAppConfig = {
     CapitalizePipe,
     ChatPage,
     HomePage,
+    MessageBoxComponent,
     MyApp,
     SignupPage,
-    SigninPage
+    SigninPage,
+    UserInfoComponent,
+    UserMenuComponent,
+    UserProfilePage
   ],
   imports: [
     AngularFireModule.initializeApp(firebaseAppConfig),
@@ -54,11 +63,13 @@ const firebaseAppConfig: FirebaseAppConfig = {
     HomePage,
     MyApp,
     SignupPage,
-    SigninPage
+    SigninPage,
+    UserProfilePage
   ],
   providers: [
     AuthService,
     ChatService,
+    MessageService,
     SplashScreen,
     StatusBar,
     UserService,

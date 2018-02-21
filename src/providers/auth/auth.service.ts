@@ -10,7 +10,7 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class AuthService extends BaseService {
 
-  constructor(protected  afAuth: AngularFireAuth,
+  constructor(public  afAuth: AngularFireAuth,
               public http: HttpClient) {
     super();
   }

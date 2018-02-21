@@ -28,6 +28,7 @@ export abstract class BaseComponent implements OnInit {
             this.authService.logout()
               .then(()=>{
                 this.navCtrl.setRoot(SigninPage);
+                this.menuCrtl.enable(false,'user-menu');
               });
           }
         },

@@ -12,13 +12,29 @@
     </ion-segment>
   </ion-toolbar>
 
+  <ion-toolbar>
+    <ion-searchbar (ionInput)="filterItem($event)"></ion-searchbar>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content padding>
+
   <div [ngSwitch]="view">
-    <ion-list *ngSwitchCase="'chats'">
-      <ion-item>Chats</ion-item>
+
+    <ion-list *ngSwitchCase="'chats'" no-lines>
+      <button ion-item *ngFor="let chat of chats | async" (click)="onChatOpen(chat)">
+        <ion-avatar item-start>
+          <img [src]="chat.photo || 'assets/imgs/no-photo.jpg'">
+        </ion-avatar>
+        <h2>{{ chat.title }}</h2>
+        <p *ngIf="chat.lastMessage; else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm' }} - {{ chat.lastMessage }}</p>
+        <ng-template #customMessage>
+          <p>No messages</p>
+        </ng-template>
+      </button>
     </ion-list>
+
     <ion-list *ngSwitchCase="'users'">
       <button ion-item *ngFor="let user of users | async" (click)="onChatCreate(user)">
         {{user.name}}

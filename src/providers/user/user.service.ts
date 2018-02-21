@@ -8,10 +8,10 @@ import {FirebaseApp} from 'angularfire2';
 import {BaseService} from '../base/base';
 
 import {User} from '../../model/user.model';
+import {AngularFireAuth} from "angularfire2/auth";
+import {AngularFireStorage, AngularFireUploadTask} from "angularfire2/storage";
 
 import * as firebase from 'firebase/app';
-import {AngularFireAuth} from "angularfire2/auth";
-
 
 @Injectable()
 export class UserService extends BaseService {
@@ -21,6 +21,7 @@ export class UserService extends BaseService {
 
   constructor(protected afAuth: AngularFireAuth,
               protected  afDataBase: AngularFireDatabase,
+              protected afStorage: AngularFireStorage,
               protected  firebaseApp: FirebaseApp,
               protected http: HttpClient) {
     super();
@@ -29,7 +30,7 @@ export class UserService extends BaseService {
 
   private listenAuthState(): void {
     this.afAuth.authState.subscribe((authUser: firebase.User) => {
-      if(!authUser){
+      if (!authUser) {
         return;
       }
       this.currentUser = this.afDataBase.object(`/users/${authUser.uid}`);
@@ -41,7 +42,7 @@ export class UserService extends BaseService {
     this.users = this.mapListKeys(
       this.afDataBase
         .list<User>(`/users/`, (ref: firebase.database.Reference) => ref.orderByChild('name'))
-    ).map((usersDB: User[])=> {
+    ).map((usersDB: User[]) => {
       return usersDB.filter((user: User) => user.$key !== uidToExclude);
     });
   }
@@ -52,12 +53,26 @@ export class UserService extends BaseService {
       .catch(this.handlePromiseError);
   }
 
+  edit(user: { name: string, username: string, photo: string }): Promise<void> {
+    return this.currentUser
+      .update(user)
+      .catch(this.handlePromiseError);
+  }
+
   userExists(username: string): Observable<boolean> {
     return this.afDataBase.list(`/users/`, (ref: firebase.database.Reference) => ref.orderByChild('username').equalTo(username))
       .valueChanges()
       .map((usersEquals: any[]) => {
         return usersEquals.length > 0;
       }).catch(this.handleObservableError);
+  }
+
+  getUserById(uidUser: string): AngularFireObject<User> {
+    return this.afDataBase.object<User>(`/users/${uidUser}`);
+  }
+
+  uploadPhoto(file: File, userId: string): AngularFireUploadTask {
+    return this.afStorage.upload(`/users/${userId}`, file);
   }
 
 }
