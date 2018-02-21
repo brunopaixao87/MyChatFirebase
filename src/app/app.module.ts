@@ -25,6 +25,8 @@ import {MessageBoxComponent} from '../components/message-box/message-box.compone
 import {UserInfoComponent} from '../components/user-info/user-info.component';
 import {UserMenuComponent} from '../components/user-menu/user-menu.component';
 import {UserProfilePage} from '../pages/user-profile/user-profile';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+import { ProgressBarComponent } from '../components/progress-bar/progress-bar.component';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: 'AIzaSyDA5sh07TnKTW2jJTvVaxylWwwqV0pZ3J0',
@@ -43,6 +45,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
     HomePage,
     MessageBoxComponent,
     MyApp,
+    ProgressBarComponent,
     SignupPage,
     SigninPage,
     UserInfoComponent,
@@ -52,6 +55,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
   imports: [
     AngularFireModule.initializeApp(firebaseAppConfig),
     AngularFireAuthModule,
+    AngularFireStorageModule,
     AngularFireDatabaseModule,
     BrowserModule,
     IonicModule.forRoot(MyApp),

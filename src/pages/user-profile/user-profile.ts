@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
-import {AuthService} from '../../providers/auth/auth.service';
-import {UserService} from '../../providers/user/user.service';
-import {User} from "../../model/user.model";
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { AuthService } from '../../providers/auth/auth.service';
+import { UserService } from '../../providers/user/user.service';
+import { User } from "../../model/user.model";
 
 import * as firebase from 'firebase/app';
 import UploadTaskSnapshot = firebase.storage.UploadTaskSnapshot;
@@ -15,13 +15,13 @@ export class UserProfilePage {
 
   currentUser: User;
   canEdit: boolean = false;
-  uploadProgress: number ;
+  uploadProgress: number;
   private filePhoto: File;
 
   constructor(protected autnService: AuthService,
-              protected navCtrl: NavController,
-              protected navParams: NavParams,
-              protected userService: UserService) {
+    protected navCtrl: NavController,
+    protected navParams: NavParams,
+    protected userService: UserService) {
   }
 
   ionViewCanEnter(): Promise<boolean> {
@@ -37,26 +37,29 @@ export class UserProfilePage {
       });
   }
 
-  onsubmit(event: Event): void {
+  onSubmit(event: Event): void {
     event.preventDefault();
-    if (this.filePhoto) {
-      const uploadTask = this.userService.uploadPhoto(this.filePhoto, this.currentUser.$key);
-      const task = uploadTask.task;
-
-      task.on('state_changed',(snapshot: UploadTaskSnapshot) => {
-        this.uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      }, (error: Error) => {
-        console.log(error);
-      });
-
-      task.then((uploadTaskSnapshot: any) => {
-        this.editUserToPhoto(uploadTaskSnapshot.downloadURL)
-      });
-
-
-    } else {
+    if (!this.filePhoto) {
       this.editUserToPhoto();
+      return;
+
     }
+
+    const uploadTask = this.userService.uploadPhoto(this.filePhoto, this.currentUser.$key);
+    const task = uploadTask.task;
+
+    task.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+      this.uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    }, (error: Error) => {
+      console.log('Erro no upload!');
+      console.log(error);
+    });
+
+    task.then((uploadTaskSnapshot: any) => {
+      this.editUserToPhoto(uploadTaskSnapshot.downloadURL)
+    });
+
+
   }
 
   private editUserToPhoto(photoUrl?: string): void {
@@ -66,10 +69,10 @@ export class UserProfilePage {
         username: this.currentUser.username,
         photo: photoUrl || this.currentUser.photo || ''
       }).then(() => {
-      this.canEdit = false;
-      this.filePhoto = undefined;
-      this.uploadProgress = 0;
-    });
+        this.canEdit = false;
+        this.filePhoto = undefined;
+        this.uploadProgress = 0;
+      });
   }
 
   onPhoto(event): void {
